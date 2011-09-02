@@ -1,0 +1,398 @@
+\documentclass[DIV15,a4paper]{scrartcl}
+% \documentclass[DIV12,a4paper]{scrartcl}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[pdftex]{graphicx}
+\definecolor{Gray}{gray}{0.9}
+\usepackage{paralist}
+\usepackage{scrpage2}
+\usepackage{listings}           % Paket, um Listings einzubinden
+\usepackage{subfigure}
+
+\usepackage{lastpage}
+\pagestyle{scrheadings}
+\ohead{A Guide to building the ReconOS/eCos reference system}
+\ihead{FP7-257906 EPiCS}
+\cfoot{Page \thepage\ of \pageref{LastPage}}
+
+\usepackage[colorlinks=true,
+        linkcolor=black,
+        citecolor=black,
+        filecolor=black,
+        %pagecolor=black,
+        urlcolor=black,
+        bookmarks=true,
+        bookmarksopen=true,
+        bookmarksopenlevel=3,
+        plainpages=false,
+        pdfpagelabels=true]{hyperref}	% always as last package
+
+
+
+\graphicspath{{fig/}}
+
+\newcommand{\raisehalf}[1]{\raisebox{1.5ex}[-1.5ex]{#1}}
+
+
+\begin{document}
+\begin{titlepage}
+
+\sffamily
+
+%\begin{tabular}{>{\columncolor{Gray}}lm{9cm}}
+%	& \\
+%	  \mbox{
+%		\begin{tabular}{rl}
+%		  \multicolumn{2}{c}{\huge\textbf{D3.1 - User Guide}} \\[0.2ex]
+%			Revision: 						& 1.0 \\
+%			Date:    							& 2011-08-31 \\
+%			Author:  						  & UPB \\
+%			Dissemination Status: & PU \\
+%			Document Reference:   & D3.1 \\[2ex]
+%		\end{tabular}
+%	}	&	 \hspace{0.5cm} \includegraphics[width=8cm]{logo_epics.pdf} \hspace{0.5cm} \\
+%\end{tabular}
+
+\includegraphics[width=8cm]{logo_epics.pdf} \hspace{0.5cm}
+
+\begin{center}
+
+	\vspace{1cm}
+	
+	Project no. 257906\\
+	\textbf{EPiCS}\\
+	\textbf{Engineering Proprioception in Computing Systems}
+	
+	\vspace{1cm}
+
+	{\huge\textbf{A Guide to building the ReconOS/eCos reference system}}
+
+%	Due date of deliverable: 2011-08-31 (T0+12)\\
+
+%	\vspace{1ex}
+	
+%	Dissemination Level: \textbf{PU} (Public)
+%	Dissemination Level: \textbf{PP} (Restricted to other programme participants)
+%	Dissemination Level: \textbf{RE} (Restricted to a group specified by the consortium)
+%	Dissemination Level: \textbf{CO} (Confidential, only for members of the consortium)
+
+%	\vspace{1ex}
+
+%	Lead partner for this deliverable: UPB\\
+%	Contributing partners: EADS, ETHZ
+
+%	\vspace{1cm}
+
+	%Revision: \textbf{1.0}\\
+	%Status: \textbf{Draft}
+	%Status: \textbf{Final version}
+
+	%\vspace{1cm}
+	\vspace{5cm}
+{
+\footnotesize
+\begin{tabular}{rll}
+
+	Project acronym:			& \multicolumn{2}{l}{EPiCS} \\
+	Project name:					& \multicolumn{2}{l}{Engineering Proprioception in Computing Systems} \\
+	Call and Contract:		& \multicolumn{2}{l}{FP7-ICT-2009-5} \\
+	Grant agreement no.:  & \multicolumn{2}{l}{257906} \\
+	Project duration:			& \multicolumn{2}{l}{2010-09-01 -- 2014-08-31 (48 months)} \\
+	Coordinator:					& UPB & University of Paderborn (DE) \\
+	Partners:							& IMPERIAL & Imperial College London (UK) \\
+												& UIO & University of Oslo (NO) \\
+												& UNI-KLU & University of Klagenfurt (AT) \\
+												& UOBIRM & University of Birmingham (UK) \\
+												& EADS & EADS Innovation Works (DE) \\
+												& ETHZ & ETH Z\"urich (CH) \\
+												& AIT & Austrian Institute of Technology (AT) \\
+\end{tabular}
+
+
+}
+
+	\vspace{3cm}
+	
+	{\footnotesize This project is supported by funding from the FET proactive initiative ``Self-Awareness in Autonomic Systems'' by the European Union 7th Framework Programme.\\[2ex]
+	\includegraphics[height=1cm]{logo_eu.png} \hspace{1cm} \includegraphics[height=1cm]{logo_fp7.png}}
+\end{center}
+
+\newpage
+
+\begin{center}
+
+{\large\textbf{Document History}}
+
+\vspace{1ex}
+
+\begin{tabular}{llp{3cm}p{4cm}p{3cm}}
+	\toprule
+	\textbf{Revision} & \textbf{Date} & \textbf{Scope of changes} & \textbf{Description}       & \textbf{Implemented by} \\
+	\midrule
+	0.1               & 2011-09-01    & All sections             & New document                & UPB           \\
+%	0.2               & 2011-05-30    & All sections             & Prepared draft              & EADS           \\
+%	1.0               & 2011-06-08    & All sections             & Revised and released        & UPB         \\
+	
+\bottomrule
+\end{tabular}
+
+\vspace{1cm}
+
+\end{center}
+
+\vspace{1cm}
+
+\textbf{Disclaimer:} The information in this document is subject to change without notice. Company or product names mentioned in this document may be trademarks or registered trademarks of their respective owners. 
+
+\begin{center}
+All rights reserved. 
+\end{center}
+
+The document is the property of the EPiCS consortium members. No copying or distributing, in any form or by any means, is allowed without the prior written agreement of the owner of the property rights.
+
+This document reflects only the authors' view. The European Community is not liable for any use that may be made of the information contained herein.
+
+\end{titlepage}
+
+\tableofcontents
+
+\newpage
+
+\section{A guide to building the ReconOS/eCos system} \label{sec:guide_ecos}
+
+This guide will lead you through the steps necessary for building a static design using ReconOS. We will be using a simple example with one slot containing a static hardware thread. As application we will implement a sorter. In a first step, the application generates random data. In a next step, the data is divided into chunks of 8 Kbyte. These chunks will be sorted by either the hardware thread or a software thread using the bubble sort algorithm. The chunks will then be merged, such that in the end the entire data is sorted. To ensure correctness, the application checks, if the data is sorted correctly.
+
+\subsection{Prerequisites}
+
+% This tutorial will assume that you already have checked out the ReconOS repository and build all required tools and libraries.
+% Refer to the documentation pages that cover these topics: Installation. Furthermore, this 
+This tutorial assumes that you have a Xilinx
+Virtex-6 ML605 board with a compatible memory module installed.
+
+\subsection*{Create project:}
+
+First we create the structure of the project. This is easily done by using the command
+
+\begin{verbatim}
+
+     reconos_mkprj.py <project_name>
+
+\end{verbatim}
+     
+This creates the typical ReconOS project environment with the SW and HW directory. Now we have to change the project settings.
+From this point on, we assume that \$WORK describes the path to your project folder.
+
+\begin{verbatim}
+
+     file: <project_name>.rprj
+
+\end{verbatim}
+     
+The line beginning with STATIC-THREADS has to be edited, because we add a hardware thread that can sort 8 Kbytes of data. Name the thread sort8k by adding this to the line.
+
+Note: This tutorial creates the multi-core environment on the Xilinx Virtex-6 ML605. If you want to create it for a different FPGA, you have to change the reference design in the project file.
+
+Now edit the layout file:
+
+\begin{verbatim}
+
+     hw/<project_name>.lyt
+
+\end{verbatim}
+     
+Delete everything except the TARGET definition. The final file should look like this (for the Xilinx Virtex-6 ML605):
+
+
+\begin{verbatim}
+
+     target
+         device xc6vlx240t
+         family xc6v
+     end
+     
+\end{verbatim}
+
+In a last step, set the environment variable \$HW\_THREADS
+
+\begin{verbatim}
+
+     source $WORK/settings.sh
+
+\end{verbatim}
+     
+After this, the project structure is ready to be worked with.
+
+
+\subsection{Hardware design}
+
+
+\subsection*{Add static hardware thread:}
+
+In this tutorial, we will use an existing simple example thread that sorts 8 Kbytes of data.
+The thread waits for a message from an incoming message queue containing the address of the data chunk and sends a
+message to an outgoing queue when sorting is done. The thread is composed in two VHDL files that can be found under
+\begin{verbatim}\$RECONOS/demos/sort_demo/src/bubble_sorter.vhd\end{verbatim}
+and \begin{verbatim}\$RECONOS/demos/sort_demo/src/sort8k.vhd\end{verbatim}
+Copy both files to the
+\begin{verbatim}\$PROJECT_NAME/hw\end{verbatim} directory:
+
+\begin{verbatim}
+
+     cp \$RECONOS/demos/sort_demo/src/*.vhd \$WORK/hw/*.vhd
+
+\end{verbatim}
+     
+Have a look at the VHDL code--most threads will be of a similar structure. \begin{verbatim}sort8k.vhd\end{verbatim} contains the synchronous state machine
+that is connected to the operating system interface (OSIF), i.e. waiting for messages,
+while \begin{verbatim}bubble_sorter.vhd\end{verbatim} contains the user logic
+for sorting the data.
+
+\begin{verbatim}
+
+     cd \$WORK/hw/hw_threads
+     reconos_addwthread.py sort8k sort8k ../bubble_sorter.vhd ../sort8k.vhd
+
+\end{verbatim}
+     
+The arguments to the \begin{verbatim}reconos_addwthread.py\end{verbatim} script are the hardware thread's entity name,
+the user logic entity's name (often the same as the one before), and the source files sorted after dependency such that the
+top file comes last. The script now creates an EDK pcore that contains the interface structures necessary to connect our
+hardware thread to the already instantiated OSIF.
+
+Note that you can instantiate the same hardware thread multiple times.
+
+\subsubsection*{Generate static hardware design - option 1: Using the XPS tool:}
+
+To generate the hardware design you first copy a reference design and insert static threads. This is done by the following command:
+
+\begin{verbatim}
+
+     cd $WORK/hw
+     make static-threads
+
+\end{verbatim}
+     
+Now we create the software libraries and the final bitstream. This can be done using the Xilinx Platform Studio (XPS).
+
+You have to open the project which can be found in \$WORK/hw/edk-static/system.xmp.
+
+Compile the software drivers and library functions into a BSP, using the ``Software$\rightarrow$Generate libraries and BSPs'' menu item. 
+This will generate the Xilinx headers and particularly libxil.a which we will need when compiling the eCos library. 
+You need to regenerate this BSP whenever you change the hardware architecture (e.g. add OSIFs/slots, peripherals, change the memory map, etc.).
+
+Finally, generate the bitstream, using the ``Hardware$\rightarrow$Generate Bitstream'' menu item.
+
+\subsection*{Generate static hardware design - option 2: Using the makefile:}
+
+Alternatively, you can also use the makefile to do these steps
+
+\begin{verbatim}
+
+     cd $WORK/hw
+     make bits-static
+
+\end{verbatim}
+     
+     
+\subsection{Software design}
+
+\subsection*{Code the software application:}
+
+Now copy the software part of the demo application into your project.
+
+\begin{verbatim}
+
+     cp -r $RECONOS/demos/sort_demo/src/sw $WORK/sw
+
+\end{verbatim}
+     
+\subsection*{Create an eCos configuration:}
+
+ReconOS extends the embedded operating system eCos that is composed of packages. The eCos configuration file sort.ecc
+defines the eCos configuration. (You can modify it using the configtool.)
+
+\begin{verbatim}
+
+     cd $WORK/sw
+     make mrproper setup
+
+\end{verbatim}
+     
+\subsection*{Compile the SW application:}
+
+Compile the software parts of the application and link them into an executable.
+
+\begin{verbatim}
+
+     make clean ecos
+
+\end{verbatim}
+     
+\subsection{Configure the FPGA and upload the application}
+
+\subsection*{Start the modem:}
+
+In a new shell, start the minicom modem, such that the print-functions, which are called by the software part
+of application and forwarded through the serial port to your computer, is shown to you.
+
+\begin{verbatim}
+
+     minicom
+
+\end{verbatim}
+     
+When you have uploaded an executable, the print output will be shown here.
+
+\subsection*{Configure the FPGA:}
+
+To configure the FPGA with your hardware design, you have to download the bitstream to the board.
+
+\begin{verbatim}
+
+     cd $WORK/sw
+     dow ../hw/edk-static/implementation/system.bit
+
+\end{verbatim}
+     
+\subsection*{Upload the application:}
+
+We have four different executables, which you can test.
+
+    The first one executes the entire application in a function that runs on the CPU.
+
+\begin{verbatim}
+    
+              dow sort_ecos_st_sw.elf
+
+\end{verbatim}    
+              
+    The second setting instantiates several software threads for the sorting part. Each thread can sort 8 Kbytes of data. 
+The application divides the entire data into such chunks and sends the starting addresses to a message queues. Each thread waits for such a message, 
+then sorts the corresponding chunk and sends a message to an outgoing message box when the sorting is done. Then it waits for the next chunk message, and so on. Here we use only software threads.
+
+\begin{verbatim}
+    
+              dow sort_ecos_mt_sw.elf
+
+\end{verbatim}
+              
+    The third setting instantiates a hardware thread instead of multiple software threads.
+
+\begin{verbatim}
+    
+              dow sort_ecos_st_hw.elf
+
+\end{verbatim}
+              
+    The last setting combines the second with the third setting, such that multiple software threads and a single hardware threads run concurrently. 
+The CPU and the hardware thread can run in parallel. Note, that the threads are independent of each other.
+
+\begin{verbatim}
+    
+              dow sort_ecos_mt_hw.elf
+
+\end{verbatim}
+
+\end{document}

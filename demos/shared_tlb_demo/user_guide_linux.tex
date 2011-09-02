@@ -1,0 +1,301 @@
+\documentclass[DIV15,a4paper]{scrartcl}
+% \documentclass[DIV12,a4paper]{scrartcl}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[pdftex]{graphicx}
+\definecolor{Gray}{gray}{0.9}
+\usepackage{paralist}
+\usepackage{scrpage2}
+\usepackage{listings}           % Paket, um Listings einzubinden
+\usepackage{subfigure}
+
+\usepackage{lastpage}
+\pagestyle{scrheadings}
+\ohead{A Guide to building the ReconOS/Linux reference system}
+\ihead{FP7-257906 EPiCS}
+\cfoot{Page \thepage\ of \pageref{LastPage}}
+
+\usepackage[colorlinks=true,
+        linkcolor=black,
+        citecolor=black,
+        filecolor=black,
+        %pagecolor=black,
+        urlcolor=black,
+        bookmarks=true,
+        bookmarksopen=true,
+        bookmarksopenlevel=3,
+        plainpages=false,
+        pdfpagelabels=true]{hyperref}	% always as last package
+
+
+
+\graphicspath{{fig/}}
+
+\newcommand{\raisehalf}[1]{\raisebox{1.5ex}[-1.5ex]{#1}}
+
+
+\begin{document}
+\begin{titlepage}
+
+\sffamily
+
+%\begin{tabular}{>{\columncolor{Gray}}lm{9cm}}
+%	& \\
+%	  \mbox{
+%		\begin{tabular}{rl}
+%		  \multicolumn{2}{c}{\huge\textbf{D3.1 - User Guide}} \\[0.2ex]
+%			Revision: 						& 1.0 \\
+%			Date:    							& 2011-08-31 \\
+%			Author:  						  & UPB \\
+%			Dissemination Status: & PU \\
+%			Document Reference:   & D3.1 \\[2ex]
+%		\end{tabular}
+%	}	&	 \hspace{0.5cm} \includegraphics[width=8cm]{logo_epics.pdf} \hspace{0.5cm} \\
+%\end{tabular}
+
+\includegraphics[width=8cm]{logo_epics.pdf} \hspace{0.5cm}
+
+\begin{center}
+
+	\vspace{1cm}
+	
+	Project no. 257906\\
+	\textbf{EPiCS}\\
+	\textbf{Engineering Proprioception in Computing Systems}
+	
+	\vspace{1cm}
+
+	{\huge\textbf{A Guide to building the ReconOS/Linux reference system}}
+
+%	Due date of deliverable: 2011-08-31 (T0+12)\\
+
+%	\vspace{1ex}
+	
+%	Dissemination Level: \textbf{PU} (Public)
+%	Dissemination Level: \textbf{PP} (Restricted to other programme participants)
+%	Dissemination Level: \textbf{RE} (Restricted to a group specified by the consortium)
+%	Dissemination Level: \textbf{CO} (Confidential, only for members of the consortium)
+
+%	\vspace{1ex}
+
+%	Lead partner for this deliverable: UPB\\
+%	Contributing partners: EADS, ETHZ
+
+%	\vspace{1cm}
+
+	%Revision: \textbf{1.0}\\
+	%Status: \textbf{Draft}
+	%Status: \textbf{Final version}
+
+	%\vspace{1cm}
+	\vspace{5cm}
+{
+\footnotesize
+\begin{tabular}{rll}
+
+	Project acronym:			& \multicolumn{2}{l}{EPiCS} \\
+	Project name:					& \multicolumn{2}{l}{Engineering Proprioception in Computing Systems} \\
+	Call and Contract:		& \multicolumn{2}{l}{FP7-ICT-2009-5} \\
+	Grant agreement no.:  & \multicolumn{2}{l}{257906} \\
+	Project duration:			& \multicolumn{2}{l}{2010-09-01 -- 2014-08-31 (48 months)} \\
+	Coordinator:					& UPB & University of Paderborn (DE) \\
+	Partners:							& IMPERIAL & Imperial College London (UK) \\
+												& UIO & University of Oslo (NO) \\
+												& UNI-KLU & University of Klagenfurt (AT) \\
+												& UOBIRM & University of Birmingham (UK) \\
+												& EADS & EADS Innovation Works (DE) \\
+												& ETHZ & ETH Z\"urich (CH) \\
+												& AIT & Austrian Institute of Technology (AT) \\
+\end{tabular}
+
+
+}
+
+	\vspace{3cm}
+	
+	{\footnotesize This project is supported by funding from the FET proactive initiative ``Self-Awareness in Autonomic Systems'' by the European Union 7th Framework Programme.\\[2ex]
+	\includegraphics[height=1cm]{logo_eu.png} \hspace{1cm} \includegraphics[height=1cm]{logo_fp7.png}}
+\end{center}
+
+\newpage
+
+\begin{center}
+
+{\large\textbf{Document History}}
+
+\vspace{1ex}
+
+\begin{tabular}{llp{3cm}p{4cm}p{3cm}}
+	\toprule
+	\textbf{Revision} & \textbf{Date} & \textbf{Scope of changes} & \textbf{Description}       & \textbf{Implemented by} \\
+	\midrule
+	0.1               & 2011-09-01    & All sections             & New document                & UPB           \\
+%	0.2               & 2011-05-30    & All sections             & Prepared draft              & EADS           \\
+%	1.0               & 2011-06-08    & All sections             & Revised and released        & UPB         \\
+	
+\bottomrule
+\end{tabular}
+
+\vspace{1cm}
+
+\end{center}
+
+\vspace{1cm}
+
+\textbf{Disclaimer:} The information in this document is subject to change without notice. Company or product names mentioned in this document may be trademarks or registered trademarks of their respective owners. 
+
+\begin{center}
+All rights reserved. 
+\end{center}
+
+The document is the property of the EPiCS consortium members. No copying or distributing, in any form or by any means, is allowed without the prior written agreement of the owner of the property rights.
+
+This document reflects only the authors' view. The European Community is not liable for any use that may be made of the information contained herein.
+
+\end{titlepage}
+
+\tableofcontents
+
+\newpage
+
+\section{A guide to building the ReconOS/Linux reference system}
+\label{sec:guide_linux}
+
+This section will show you how to build a virtual memory enabled ReconOS/Linux system. Since the automated ReconOS tool flow is geared towards
+building under the eCos operating system, large parts of the hardware design have to be assembled manually. Because this process is prone to errors,
+we recommend starting with our ReconOS/Linux reference design and change it according to your application needs. The following sections will explain
+how this can be done.
+
+\subsection{Prerequisites}
+
+This tutorial will assume that you already have checked out the ReconOS repository and build all required tools and libraries.
+% Refer to the documentation pages that cover these topics: Installation. Furthermore, this 
+This tutorial assumes that you have a Xilinx XUPV2P board with a compatible memory module installed.
+
+\subsection{Building the reference design}
+
+In order to build the reference design we first build the hardware which results in a bitstream for the FPGA. Then, we build the necessary software which includes
+the Linux kernel, the OSIF module, the ReconOS user space library and the application binary.
+
+\subsection*{Building the hardware}
+
+First, change to the project directory:
+
+\begin{verbatim}
+        $ cd $(RECONOS)/demos/shared_tlb_demo
+\end{verbatim}
+
+A makefile in the project directory provides a convenient way to generate the static bitstream. Using the makefile the bitfile and the device tree file can be generated
+using the following two lines:
+
+\begin{verbatim}
+        $ make setup
+        $ make hw
+\end{verbatim}
+
+\subsection*{Building the software}
+
+Next, we compile the Linux kernel using the device tree file generated in the previous step. This is automated using the makefile in the project directory:
+
+\begin{verbatim}
+        $ make linux
+\end{verbatim}
+
+Unlike the ReconOS package in eCos, the ReconOS extensions to the Linux system software are split into two parts: A kernel module (\texttt{osif.ko}) and a user space library
+(\texttt{libreconos.a}). The library can be build using the Makefile in the project directory:
+
+\begin{verbatim}
+        $ make libreconos
+\end{verbatim}
+
+The next step is to configure and compile the Linux kernel. Since our system was developed against kernel
+version 2.6.27-rc9 we recommend to use that version. The kernel sources can be obtained from the Xilinx
+Linux repository located at \texttt{git://git.xilinx.com}. Once you have obtained the kernel sources and
+applied the ReconOS/Linux kernel patch, create a link in your project directory pointing to the kernel sources:
+
+\begin{verbatim}
+	$ ln -s linux <path to patched kernel tree>
+\end{verbatim}
+
+Alternatively you can also copy the kernel tree into your project directory. After configuring the kernel you can use the makefile to build the kernel image:
+
+\begin{verbatim}
+	$ make linux
+\end{verbatim}
+
+After the kernel is configured and an image has been build, you can now create the ReconOS kernel module, located at \texttt{\$(RECONOS)/core/linux/drivers/reconos}.
+The final step in the build process is the generation of the software executable:
+
+\begin{verbatim}
+	$ make shared_tlb_demo
+\end{verbatim}
+
+This command creates the software demo application and links it to the \texttt{libreconos} library. 
+
+\subsection{Running the test application}
+
+After the hardware design and the software components have been build, we have to prepare our host computer system to export the reference design root file system and
+to connect to the Linux console via the serial link.
+
+\subsection*{Setting up the NFS root file system}
+
+In order to set up the NFS root file system export, we have to create a virtual network interface on the host computer. The IP address of the new interface has to be the same
+address that is specified in the reference design kernel. In our case this is the address  \texttt{192.168.30.1}. To set up the virtual network interface, execute the following
+command (may require root privileges).
+
+\begin{verbatim}
+	$ ifconfig eth0:1 192.168.30.1 up
+\end{verbatim}
+
+Next, we have to set up NFS. Open the file \texttt{/etc/exports} and add the following line:
+
+\begin{verbatim}
+/exports 192.168.30.0/255.255.255.0(rw,insecure,no_root_squash,\
+no_all_squash,no_subtree_check)
+\end{verbatim}
+
+Now create the directory \texttt{/exports/rootfs} and copy the reference design root file system into that new directory. Connect the RS232 and Ethernet ports of the FPGA board
+with the host computer and program the FPGA with the bitstream created above. Start \texttt{minicom} and connect to the PowerPC with \texttt{xmd} and download the kernel image:
+
+\begin{verbatim}
+	$ xmd
+	XMD% connect powerpc hw
+	XMD% dow linux/arch/powerpc/boot/simpleImage.virtex405-xup-opb-eth-tft-cf.elf
+	XMD run
+\end{verbatim}
+
+You should now see the boot messages of the kernel on the minicom console. After the kernel boot process finished and the root file system is mounted you are greeted with a shell
+prompt and should be able to list and browse the root file system.
+
+\subsection*{Loading the OSIF drivers}
+
+Before you can use the demo application you have to load the ReconOS kernel module. Copy the \texttt{osif.ko} kernel module that was created in a previous step to the NFS root file
+system.
+
+\begin{verbatim}
+	$ cp osif.ko /exports/rootfs
+\end{verbatim}
+
+
+Then switch to the minicom console and load the module:
+
+\begin{verbatim}
+	$ insmod ./osif.ko
+\end{verbatim}
+ 
+Then you can run the application:
+
+\begin{verbatim}
+	$ ./shared_tlb_demo 1024
+\end{verbatim}
+
+\subsection{Making changes to the project}
+
+While building and setting up the system the first time can be quite time consuming, making changes to existing applications or creating new ones is easy and straight forward.
+After making changes to the software part of the application, it is sufficient to recompile it and put the new version into the NFS root file system. When you change the hardware threads, you
+only have to create the new bitstream and program the FPGA. A recompilation of the Linux kernel is only necessary when you make changes to the hardware design (i.e., adding
+ or removing peripherals or changing bus addresses).
+
+\end{document}
