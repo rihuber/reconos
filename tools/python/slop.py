@@ -42,13 +42,13 @@ class Options:
 
     optDict = {}
 
-    def _initOpt(self, name, letter, description, argRequired, optional, default = None, as = "string"):
+    def _initOpt(self, name, letter, description, argRequired, optional, default = None, as123 = "string"):
         self.optDict[name] = { "letter" : letter,
                           "description" : description,
                           "argRequired" : argRequired,
                           "optional"    : optional,
                           "present"     : False,
-                          "as"          : as,
+			  "as"		: as123,
                           "value"       : default}
 
     def __init__(self, optDef, banner=None):
@@ -58,7 +58,7 @@ class Options:
             assert len(d) < 6
             letter, name, description = d[0:3]
             default = None
-            as = "string"
+            as123 = "string"
             if letter != None:
                 letterStr = "-" + letter
             else:
@@ -82,13 +82,13 @@ class Options:
                         if "default" in x.keys():
                             default = x["default"]
                         if "as" in x.keys():
-                            as = x["as"]
+                            as123 = x["as"]
             # add option to internal optDict
             self._initOpt(name, letter, description, argRequired, optional,
-                    default, as)
+                    default, as123)
             # add options to parser
             if argRequired:
-                if as in ("array", "list"):
+                if as123 in ("array", "list"):
                     action = "append"
                 else:
                     action = "store"
